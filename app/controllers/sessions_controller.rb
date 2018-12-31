@@ -18,5 +18,14 @@ class SessionsController < ApplicationController
 
     auth = JSON.parse(oauth_response.body)
     binding.pry
+    user = User.find_or_create_by(uid: auth["id"])
+    user.username = auth["login"]
+    user.uid = auth["id"]
+    user.token = token
+    user.save
+
+    session[:user_id] = user.id
+
+    redirect_to dashboard_path
   end
 end
